@@ -16,11 +16,13 @@ class zimbra::params () {
   $download_package_url = 'http://files2.zimbra.com/downloads/8.0.5_GA/'
 
   $download_package_file =  $operatingsystem ? {
-       /(?i-mx:ubuntu|debian)/        => 'zcs-8.0.5_GA_5839.UBUNTU12_64.20130910124038.tgz',
-       /(?i-mx:suse)/                 => 'zcs-8.0.5_GA_5839.SLES11_64.20130910123623.tgz',
-       /(?i-mx:centos|fedora|redhat)/ => 'zcs-8.0.5_GA_5839.RHEL6_64.20130910123908.tgz',
-       default                        => 'zcs-8.0.5_GA_5839.UBUNTU12_64.20130910124038.tgz',
+       /(?i-mx:ubuntu|debian)/        => 'zcs-8.0.5_GA_5839.UBUNTU12_64.20130910124038',
+       /(?i-mx:suse)/                 => 'zcs-8.0.5_GA_5839.SLES11_64.20130910123623',
+       /(?i-mx:centos|fedora|redhat)/ => 'zcs-8.0.5_GA_5839.RHEL6_64.20130910123908',
+       default                        => 'zcs-8.0.5_GA_5839.UBUNTU12_64.20130910124038',
     }
+
+  $download_package_ext = '.tgz'
 
   $domain = $::fqdn
 
@@ -31,5 +33,7 @@ class zimbra::params () {
   $ldap_amavis_pass = '100%Coffee'
   $ldap_root_pass   = '100%Coffee'
   $ldap_admin_pass  = '100%Coffee'
+  $http_port        = '17080' #Different ports because these are usually in use
+  $https_port       = '17443' #Different ports because these are usually in use
   
 }

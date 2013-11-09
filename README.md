@@ -28,3 +28,4 @@ Zimbra uses the following ports:
 | Mailboxd LMTP         | 7025 |
 
 DEPENDENCIES:
+DNS name used _should_ have an MX record

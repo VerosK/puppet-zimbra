@@ -25,6 +25,9 @@ class zimbra (
     $ldap_admin_pass        = params_lookup('ldap_admin_pass'),
     $download_package_url   = params_lookup('download_package_url'),
     $download_package_file  = params_lookup('download_package_file'),
+    $download_package_ext   = params_lookup('download_package_ext'),
+    $http_port              = params_lookup('http_port'),
+    $https_port             = params_lookup('https_port'),
   ) inherits zimbra::params {
 
   if (any2bool($firewall)) {
@@ -57,10 +60,26 @@ class zimbra (
     ensure => installed,
     require => File['/tmp/puppet-zimbra/install.conf']
   }
-  ->
-  exec {"wget -O /tmp/puppet-zimbra/zimbrapackage.tgz ${download_package_url}${download_package_file}; \
-        tar -xzvf zimbrapackage.tgz -C /tmp/puppet-zimbra/zimbrapackage": # /tmp/puppet-zimbra/zimbrapackage/install.sh":
-    require => File['/tmp/puppet-zimbra'],
+  
+  $url      = $download_package_url
+  $filename = $download_package_file
+  $ext      = $download_package_ext 
+  
+  exec {"download_zimbra":
+    command => "wget -O /tmp/puppet-zimbra/${filename}${ext} ${url}${filename}${ext}",
+    creates => "/tmp/puppet-zimbra/${filename}${ext}",
+    require => Package['libgmp3c2', 'pax', 'sysstat']
+  }
+  
+  exec {"extract_zimbra":
+    command => "sudo tar -xzvf /tmp/puppet-zimbra/${filename}${ext} -C /tmp/puppet-zimbra",
+    require => Exec['download_zimbra'],
+    creates => "/tmp/puppet-zimbra/${filename}/install.sh",
+  }
+
+  exec {"install_zimbra":
+    command => "/bin/sh -c 'cd /tmp/puppet-zimbra/${filename}; ./install.sh /tmp/puppet-zimbra/install.conf'",
+    require => Exec['extract_zimbra'],
   }
   
 

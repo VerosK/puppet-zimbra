@@ -28,7 +28,9 @@ TRAINSAHAM=ham@<%= @domain %>
 TRAINSASPAM=spam@<%= @domain %>
 USEIMAPPROXY=no
 USESPELL=yes
-INSTALL_PACKAGES="zimbra-core zimbra-apache zimbra-ldap zimbra-logger zimbra-mta zimbra-snmp zimbra-spell zimbra-store zimbra-archiving zimbra-proxy"
+HTTPPORT=<%= @http_port %>
+HTTPSPORT=<%= @https_port %>
+INSTALL_PACKAGES="zimbra-core zimbra-apache zimbra-ldap zimbra-logger zimbra-mta zimbra-snmp zimbra-spell zimbra-store zimbra-proxy"
 CREATEADMINPASS=<%= @admin_pass %>
 SQLROOTPASS=<%= @sql_root_pass %>
 LDAPREPPASS=<%= @ldap_rep_pass %>
