@@ -24,8 +24,9 @@ class zimbra::params () {
 
   $download_package_ext = '.tgz'
 
-  $domain = $::fqdn
-
+  $domain = ''
+  $hostname = $::fqdn
+  
   $admin_pass       = '100%Coffee'
   $sql_root_pass    = '100%Coffee'
   $ldap_pre_pass    = '100%Coffee'

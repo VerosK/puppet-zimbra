@@ -16,6 +16,7 @@ class zimbra (
     $version  = '8.0.5',
     $firewall = true,
     $domain                 = params_lookup('domain'),
+    $hostname               = params_lookup('hostname'),
     $admin_pass             = params_lookup('admin_pass'),
     $sql_root_pass          = params_lookup('sql_root_pass'),
     $ldap_pre_pass          = params_lookup('ldap_pre_pass'),
@@ -77,10 +78,11 @@ class zimbra (
     creates => "/tmp/puppet-zimbra/${filename}/install.sh",
   }
 
-  exec {"install_zimbra":
-    command => "/bin/sh -c 'cd /tmp/puppet-zimbra/${filename}; ./install.sh /tmp/puppet-zimbra/install.conf'",
-    require => Exec['extract_zimbra'],
-  }
+  # Installing via an unattended file doesn't really work yet. You should run install.sh manually and install the server.
+  #exec {"install_zimbra":
+  #  command => "/bin/sh -c 'cd /tmp/puppet-zimbra/${filename}; sudo ./install.sh /tmp/puppet-zimbra/install.conf'",
+  #  require => Exec['extract_zimbra'],
+  #}
   
 
 }
