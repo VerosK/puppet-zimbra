@@ -10,72 +10,57 @@
 #
 # See README for usage patterns.
 #
-class zimbra (
-    $disable  = false,
-    $absent   = false,
-    $version  = '8.6.0',
-    $firewall = true,
-    $domain                 = params_lookup('domain'),
-    $hostname               = params_lookup('hostname'),
-    $admin_pass             = params_lookup('admin_pass'),
-    $sql_root_pass          = params_lookup('sql_root_pass'),
-    $ldap_pre_pass          = params_lookup('ldap_pre_pass'),
-    $ldap_post_pass         = params_lookup('ldap_post_pass'),
-    $ldap_amavis_pass       = params_lookup('ldap_amavis_pass'),
-    $ldap_root_pass         = params_lookup('ldap_root_pass'),
-    $ldap_admin_pass        = params_lookup('ldap_admin_pass'),
-    $download_package_url   = params_lookup('download_package_url'),
-    $download_package_file  = params_lookup('download_package_file'),
-    $download_package_ext   = params_lookup('download_package_ext'),
-    $http_port              = params_lookup('http_port'),
-    $https_port             = params_lookup('https_port'),
-  ) inherits zimbra::params {
+class zimbra::install (
+) inherits zimbra::params {
 
-  if (any2bool($firewall)) {
-    include iptables
-#    Service              Port    
-#    Remote Queue Manager 22
-#    Postfix              25
-#    HTTP                 80
-#    POP3                 110
-#    IMAP                 143
-#    LDAP                 389
-#    HTTPS                443
-#    Mailboxd IMAP SSL    993
-#    Mailboxd POP SSL     995
-#    Mailboxd LMTP        7025
+  service {'mta-disable':
+    name => 'postfix',
+    ensure => stopped,
+    enable => false,
   }
 
   # Create an installation folder
-  file {'/tmp/puppet-zimbra':
+  file {'/opt/zimbra-installer':
     ensure => directory,
   }
   
-  file {'/tmp/puppet-zimbra/install.conf':
+  file {'/opt/zimbra-installer/install.conf':
     content => template('zimbra/install.conf.erb'),
-    require => File['/tmp/puppet-zimbra'],
+    require => File['/opt/zimbra-installer'],
   }
 
   #Prerequisites
-  package { ['libgmp3c2', 'pax', 'sysstat']:
+  package { ['sysstat', 'nc']:
     ensure => installed,
-    require => File['/tmp/puppet-zimbra/install.conf']
   }
-  
-  $url      = $download_package_url
-  $filename = $download_package_file
-  $ext      = $download_package_ext 
-  
-  exec {"download_zimbra":
-    command => "wget -O /tmp/puppet-zimbra/${filename}${ext} ${url}${filename}${ext}",
-    creates => "/tmp/puppet-zimbra/${filename}${ext}",
-    require => Package['libgmp3c2', 'pax', 'sysstat']
-  }
-  
-  exec {"extract_zimbra":
-    command => "sudo tar -xzvf /tmp/puppet-zimbra/${filename}${ext} -C /tmp/puppet-zimbra",
-    require => Exec['download_zimbra'],
-    creates => "/tmp/puppet-zimbra/${filename}/install.sh",
+
+  if $::zimbra::params::rpm_package {
+
+    /* install installer from pre-packaged RPM */
+    package {"zimbra-installer":
+      name   => $::zimbra::params::rpm_package,
+      source => $::zimbra::params::rpm_package_url,
+      ensure => installed,
+      before => File["/opt/zimbra-installer"],
+    }
+
+  } else {
+    /* download .tar.gz and extract it */
+    $zimbra_package_tmp = "/tmp/zimbra-package.tar.gz"
+    $zimbra_package_url = $::zimbra::params::download_package_url
+
+    exec {"zimbra::download":
+      command => "wget -O ${zimbra_package_tmp} ${zimbra_package_url}",
+      creates => $zimbra_package_tmp,
+      timeout => 1800,
+    }
+
+    exec {"zimbra::extract":
+      creates  => "/opt/zimbra-installer/install.sh",
+      require  => [File['/opt/zimbra-installer'], Exec['zimbra::download']],
+      cwd      => "/opt/zimbra-installer",
+      command  => "tar xfz ${zimbra_package_tmp} --strip-components=1",
+    }
   }
 
   # Installing via an unattended file doesn't really work yet. You should run install.sh manually and install the server.
@@ -83,6 +68,6 @@ class zimbra (
   #  command => "/bin/sh -c 'cd /tmp/puppet-zimbra/${filename}; sudo ./install.sh /tmp/puppet-zimbra/install.conf'",
   #  require => Exec['extract_zimbra'],
   #}
-  
+
 
 }

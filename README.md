@@ -3,7 +3,7 @@ puppet-zimbra
 
 Zimbra module for Puppet
 
-''IMPORTANT'': You cannot have any other web server, database, LDAP, or MTA 
+**IMPORTANT**: You cannot have any other web server, database, LDAP, or MTA 
 server running, when you install the Zimbra software. If you have installed any 
 of the applications before you install Zimbra software, disable these 
 applications. During the ZCS installation, Zimbra makes global system 
@@ -11,7 +11,7 @@ changes that may break applications that are on your server.
 
 I suggest that Zimbra is used on initial setup of the server.
 
-''FIREWALL:''
+**FIREWALL:**
 Zimbra uses the following ports:
 
 | Service               | Port |
@@ -26,6 +26,11 @@ Zimbra uses the following ports:
 | Mailboxd IMAP SSL     | 993  |
 | Mailboxd POP SSL      | 995  |
 | Mailboxd LMTP         | 7025 |
+# FIXME: 
 
 DEPENDENCIES:
 DNS name used _should_ have an MX record
+
+
+HowTo
+=====
