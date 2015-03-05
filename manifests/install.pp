@@ -63,6 +63,18 @@ class zimbra::install (
     }
   }
 
+  exec { "zimbra::install":
+    creates => "/opt/zimbra/bin/zmprov",
+    cwd     => "/opt/zimbra-installer",
+    command => $::zimbra::params::do_install ? {
+        True    => "/opt/zimbra-innstaller/install.sh install.conf",
+        default => "echo 'Run manually /opt/zimbra-innstaller/install.sh install.conf'; exit 1",
+    },
+    require => [
+            Exec["zimbra::extract"],
+            File['/opt/zimbra-installer/install.conf'],
+          ]
+    }
   # Installing via an unattended file doesn't really work yet. You should run install.sh manually and install the server.
   #exec {"install_zimbra":
   #  command => "/bin/sh -c 'cd /tmp/puppet-zimbra/${filename}; sudo ./install.sh /tmp/puppet-zimbra/install.conf'",
