@@ -15,7 +15,9 @@
 
 #https://files.zimbra.com/downloads/8.6.0_GA/zcs-8.6.0_GA_1153.RHEL6_64.20141215151155.tgz
 class zimbra::params (
+  /* use either url */
   $download_package_url = 'https://files.zimbra.com/downloads/8.6.0_GA/zcs-8.6.0_GA_1153.RHEL6_64.20141215151155.tgz',
+  /* download installer from RPM repo */
   $rpm_package      = undef,
   $rpm_package_url  = undef,
 
@@ -30,9 +32,7 @@ class zimbra::params (
   $https_port       = '443',
   $domain           = 'example.org',
   $hostname         = $::fqdn,
-  $mailboxd_memory  = '742',
-  /* ip of upstream nameserver */
-  $nameserver_ip    = '8.8.8.8',
+  /* used for creating ham & spam mailboxes */
   $secretcode       = 'r4nd0m.Ha5h',
 
   /* if do_install is set to true, then install is fired up */
