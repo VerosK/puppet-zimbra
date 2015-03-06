@@ -46,7 +46,7 @@ class zimbra::install (
 
   } else {
     /* download .tar.gz and extract it */
-    $zimbra_package_tmp = "/tmp/zimbra-package.tar.gz"
+    $zimbra_package_tmp = "/tmp/zimbra-installer-package.tar.gz"
     $zimbra_package_url = $::zimbra::params::download_package_url
 
     exec {"zimbra::download":
