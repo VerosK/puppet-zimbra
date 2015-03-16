@@ -13,11 +13,6 @@
 class zimbra (
 ) inherits zimbra::params {
 
-  # Create an installation folder
-  file {'/opt/zimbra':
-    ensure => directory,
-  }
-
   class{ "zimbra::install":
   }
 
