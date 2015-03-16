@@ -30,7 +30,7 @@ class zimbra::install (
 
   if $::zimbra::params::rpm_package {
 
-    /* install installer from pre-packaged RPM */
+    # install installer from pre-packaged RPM
     package {"zimbra-installer":
       name   => $::zimbra::params::rpm_package,
       source => $::zimbra::params::rpm_package_url,
@@ -38,8 +38,18 @@ class zimbra::install (
       before => File["/opt/zimbra-installer"],
     }
 
+    # check zimbra is extracted
+    exec { "zimbra::extract":
+      creates  => "/opt/zimbra-installer/install.sh",
+      require  => [Package['zimbra-installer']],
+      cwd      => "/opt/zimbra-installer",
+      command  => "/bin/false",
+
+    }
+
+
   } else {
-    /* download .tar.gz and extract it */
+    # download .tar.gz and extract it
     $zimbra_package_tmp = "/tmp/zimbra-installer-package.tar.gz"
     $zimbra_package_url = $::zimbra::params::download_package_url
 
