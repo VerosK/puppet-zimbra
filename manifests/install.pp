@@ -13,12 +13,6 @@
 class zimbra::install (
 ) inherits zimbra::params {
 
-  service {'mta-disable':
-    name => 'postfix',
-    ensure => stopped,
-    enable => false,
-  }
-
   # Create an installation folder
   file {'/opt/zimbra-installer':
     ensure => directory,
