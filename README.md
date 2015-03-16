@@ -22,3 +22,13 @@ Currently tested on clean CentOS6, with disabled Postfix.
     }
     class{"zimbra":
     }
+    
+**Random notes**
+
+Don't forget to disable any MTA running to not interfere with Zimbra.
+
+    service {'mta-disable':
+       name => 'postfix',
+       ensure => stopped,
+       enable => false,
+    }
