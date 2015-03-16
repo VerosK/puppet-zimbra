@@ -24,9 +24,9 @@ class zimbra::install (
   }
 
   #Prerequisites
-  package { ['sysstat', 'nc']:
-    ensure => installed,
-  }
+  ensure_resource("package", ['sysstat', 'nc'],
+      {'ensure' => 'installed'},
+  )
 
   if $::zimbra::params::rpm_package {
 
@@ -35,18 +35,8 @@ class zimbra::install (
       name   => $::zimbra::params::rpm_package,
       source => $::zimbra::params::rpm_package_url,
       ensure => installed,
-      before => File["/opt/zimbra-installer"],
+      before => Exec["zimbra::install"],
     }
-
-    # check zimbra is extracted
-    exec { "zimbra::extract":
-      creates  => "/opt/zimbra-installer/install.sh",
-      require  => [Package['zimbra-installer']],
-      cwd      => "/opt/zimbra-installer",
-      command  => "/bin/false",
-
-    }
-
 
   } else {
     # download .tar.gz and extract it
@@ -64,6 +54,7 @@ class zimbra::install (
       require  => [File['/opt/zimbra-installer'], Exec['zimbra::download']],
       cwd      => "/opt/zimbra-installer",
       command  => "tar xfz ${zimbra_package_tmp} --strip-components=1",
+      before   => Exec["zimbra::install"],
     }
   }
 
@@ -74,10 +65,7 @@ class zimbra::install (
         True    => "/opt/zimbra-innstaller/install.sh install.conf",
         default => "echo 'Run manually /opt/zimbra-innstaller/install.sh install.conf'; exit 1",
     },
-    require => [
-            Exec["zimbra::extract"],
-            File['/opt/zimbra-installer/install.conf'],
-          ]
+    require => File['/opt/zimbra-installer/install.conf'],
     }
   # Installing via an unattended file doesn't really work yet. You should run install.sh manually and install the server.
   #exec {"install_zimbra":
