@@ -1,6 +1,9 @@
 #
 # Configure sudoers for zimbra
 #
-sudo::conf{ 'zimbra':
-  source => 'puppet:///modules/zimbra/zimbra.sudoers',
+class zimbra::sudoers{
+
+  sudo::conf{ 'zimbra':
+    source => 'puppet:///modules/zimbra/zimbra.sudoers',
+  }
 }
