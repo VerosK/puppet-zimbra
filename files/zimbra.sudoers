@@ -1,0 +1,13 @@
+%zimbra ALL=NOPASSWD:/opt/zimbra/libexec/zmstat-fd *
+%zimbra ALL=NOPASSWD:/opt/zimbra/libexec/zmslapd
+%zimbra ALL=NOPASSWD:/opt/zimbra/postfix/sbin/postfix, /opt/zimbra/postfix/sbin/postalias, /opt/zimbra/postfix/sbin/qshape.pl, /opt/zimbra/postfix/sbin/postconf,/opt/zimbra/postfix/sbin/postsuper
+%zimbra ALL=NOPASSWD:/opt/zimbra/libexec/zmqstat,/opt/zimbra/libexec/zmmtastatus
+%zimbra ALL=NOPASSWD:/opt/zimbra/amavisd/sbin/amavis-mc
+%zimbra ALL=NOPASSWD:/opt/zimbra/libexec/zmunbound
+%zimbra ALL=NOPASSWD:/opt/zimbra/libexec/zmdnscachealign *
+%zimbra ALL=NOPASSWD:/opt/zimbra/libexec/zmmailboxdmgr
+%zimbra ALL=NOPASSWD:/opt/zimbra/bin/zmcertmgr
+%zimbra ALL=NOPASSWD:/opt/zimbra/nginx/sbin/nginx
+
+Defaults env_keep += PATH
+Defaults !requiretty

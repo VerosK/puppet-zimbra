@@ -23,6 +23,9 @@ Currently tested on clean CentOS6, with disabled Postfix.
     class{"zimbra":
     }
     
+Optionally, you can use classes `zimbra::sudoers`` to manage you `sudoers` file
+and `zimbra::firewall` to manage iptables rules.    
+    
 **Random notes**
 
 Don't forget to disable any MTA running to not interfere with Zimbra.
