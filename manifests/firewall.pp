@@ -12,6 +12,9 @@ class zimbra::firewall {
   firewall{ '015 http':
     dport => '80',
   }
+  firewall{ '015 https':
+    dport => '443',
+  }
   firewall{ '011 imaps':
     dport => '993',
   }
