@@ -1,7 +1,10 @@
 #
 # Create/delete one zimbra domain
 #
-define zimbra::domain($domain_name = $title, $ensure) {
+define zimbra::domain(
+  $domain_name = $title,
+  $ensure = 'present')
+{
 
   $zmprov = '/opt/zimbra/bin/zmprov'
   if ($ensure == 'absent') {
