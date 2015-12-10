@@ -22,6 +22,10 @@ Currently tested on clean CentOS6, with disabled Postfix.
     }
     class{"zimbra":
     }
+
+    zimbra::server_setting{"zimbraMtaMyNetworks": 
+	value => "127.0.0.0/8 10.0.160.0/19"
+    }
     
 Optionally, you can use classes `zimbra::sudoers` to manage you `sudoers` file
 and `zimbra::firewall` to manage iptables rules.  
